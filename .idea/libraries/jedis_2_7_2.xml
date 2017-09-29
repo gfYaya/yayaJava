@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="jedis-2.7.2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/jedis/lib/jedis-2.7.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
