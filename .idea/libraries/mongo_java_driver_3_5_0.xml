@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="mongo-java-driver-3.5.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/mongodb/lib/mongo-java-driver-3.5.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
