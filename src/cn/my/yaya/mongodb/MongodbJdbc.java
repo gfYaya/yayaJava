@@ -11,8 +11,6 @@ import org.bson.Document;
 import java.util.ArrayList;
 import java.util.List;
 
-import static sun.plugin.javascript.navig.JSType.Document;
-
 /**
  * http://www.runoob.com/mongodb/mongodb-java.html
  */

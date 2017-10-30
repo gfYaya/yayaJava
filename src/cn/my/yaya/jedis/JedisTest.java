@@ -181,7 +181,7 @@ public class JedisTest {
     @Test
     public void testHash(){
         jedis.flushDB();
-        Map<String,String> map = new HashMap<>();
+        Map<String,String> map = new HashMap<String,String>();
         map.put("key1","value1");
         map.put("key2","value2");
         map.put("key3","value3");
