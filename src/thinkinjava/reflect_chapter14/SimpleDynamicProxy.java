@@ -1,6 +1,5 @@
-package thinkinjava.reflect;
+package thinkinjava.reflect_chapter14;
 
-import javax.xml.bind.SchemaOutputResolver;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
