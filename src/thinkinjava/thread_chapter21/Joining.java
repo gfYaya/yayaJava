@@ -13,7 +13,7 @@ class Sleeper extends Thread{
 
     public void run(){
         try {
-            sleep(duration);
+            sleep(duration);//挂起sleeper
         } catch (InterruptedException e) {
             System.out.println(getName()+ " was interrrupted. " + "isInterrupted(); " + isInterrupted());
             return;
@@ -32,7 +32,7 @@ class Joiner extends Thread{
 
     public void run(){
         try {
-            sleeper.join();
+            sleeper.join();//挂起当前线程 Joiner ,让权给sleeper
         } catch (InterruptedException e) {
             System.out.println("Interrupted");
         }
@@ -43,7 +43,7 @@ class Joiner extends Thread{
 
 public class Joining {
     public static void main(String[] args) {
-        Sleeper sleepy = new Sleeper("Sleepy",1500),grumpy = new Sleeper("Grumpy",1500);
+        Sleeper sleepy = new Sleeper("Sleepy",1500),grumpy = new Sleeper("Grumpy",1500);//150000也是如此执行结果
         Joiner dopey = new Joiner("Dopey",sleepy),doc = new Joiner("Doc",grumpy);
         grumpy.interrupt();
     }
