@@ -33,7 +33,7 @@ public class SetData_API_Sync_Usage implements Watcher{
 
             Stat stat = zk.setData(path, "456".getBytes(), -1);
             System.out.println("czxID: " + stat.getCzxid() + ", mzxID: " + stat.getMzxid() + ", version: " + stat.getVersion());
-            Stat stat2 = zk.setData(path, "456".getBytes(), stat.getVersion());
+            Stat stat2 = zk.setData(path, "456".getBytes(), stat.getVersion());//setData中的version参数设置-1含义为客户端需要基于数据的最新版本进行更新操作。
             System.out.println("czxID: " + stat2.getCzxid() + ", mzxID: " + stat2.getMzxid() + ", version: " + stat2.getVersion());
 
             Thread.sleep(Integer.MAX_VALUE);
