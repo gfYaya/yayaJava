@@ -13,7 +13,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Curator 异步接口.
+ * Curator 异步接口.  //附带 连接池 ExecutorService
  */
 public class Curator_Create_Node_Background_Sample {
     static String path = "/zk-book";
