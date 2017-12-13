@@ -1,0 +1,36 @@
+<component name="libraryTable">
+  <library name="activation-1.1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/zookeeper/lib/activation-1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/zookeeper/lib/commons-cli-1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/zookeeper/lib/curator-client-2.4.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/zookeeper/lib/curator-framework-2.4.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/zookeeper/lib/curator-recipes-2.4.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/zookeeper/lib/guava-14.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/zookeeper/lib/jackson-annotations-2.7.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/zookeeper/lib/jackson-core-2.7.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/zookeeper/lib/jackson-databind-2.7.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/zookeeper/lib/jline-0.9.94.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/zookeeper/lib/log4j-1.2.16.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/zookeeper/lib/mail-1.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/zookeeper/lib/netty-3.2.2.Final.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/zookeeper/lib/slf4j-api-1.6.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/zookeeper/lib/slf4j-api-1.6.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/zookeeper/lib/slf4j-log4j12-1.6.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/zookeeper/lib/zkclient-0.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/zookeeper/lib/zookeeper-3.4.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/zookeeper/lib/zookeeper-3.5.2-alpha.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/zookeeper/lib/zookeeper-3.5.3-beta.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/zookeeper/lib/curator-framework-2.4.2-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/zookeeper/lib/curator-recipes-2.4.2-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/zookeeper/lib/zookeeper-3.5.2-alpha-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/zookeeper/lib/curator-framework-2.4.2-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/zookeeper/lib/curator-recipes-2.4.2-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/cn/my/yaya/zookeeper/lib/zookeeper-3.5.2-alpha-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
