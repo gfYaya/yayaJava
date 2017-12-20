@@ -23,7 +23,7 @@ public class Get_Data_Sample {
                 System.out.println("Node " + dataPath + " deleted.");
             }
         });
-        System.out.println(zkClient.readData(path));
+        //System.out.println(zkClient.readData(path));
         zkClient.writeData(path, "456");
         try {
             Thread.sleep(1000);
