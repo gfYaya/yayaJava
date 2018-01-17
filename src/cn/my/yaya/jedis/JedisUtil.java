@@ -35,6 +35,7 @@ public class JedisUtil {
             //config.setMaxActive(RedisConfig.MAX_ACTIVE);
             config.setMaxIdle(RedisConfig.MAX_IDLE);
             //config.setMaxWait(RedisConfig.MAX_WAIT);
+            config.setMaxTotal(200);
             config.setTestOnBorrow(true);
             config.setTestOnReturn(true);
             pool = new JedisPool(config,ip,port,RedisConfig.TIMEOUT);
