@@ -16,7 +16,8 @@ public class Main2 {
                     int temp = amount;
                     System.out.printf("t=1,i=%d,read amount = %d%n", i, temp);
                     threadSleep(100);
-                    amount = temp + 1;
+                    //amount = temp + 1;
+                    System.out.println("t=1,temp+1=" + (amount = temp + 1));
                     System.out.printf("t=1,i=%d,write amount = %d%n", i, temp + 1);
                 //}
                 threadSleep(100);
@@ -30,7 +31,8 @@ public class Main2 {
                     int temp = amount;
                     System.out.printf("t=2,i=%d,read amount = %d%n", i, temp);
                     threadSleep(150);
-                    amount = temp + 1;
+                    //amount = temp + 1;
+                    System.out.println("t=2,temp+1=" + (amount = temp + 1));
                     System.out.printf("t=2,i=%d,write amount = %d%n", i, temp + 1);
                 //}
                 threadSleep(100);
