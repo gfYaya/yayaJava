@@ -1,7 +1,5 @@
 package cn.my.yaya.test4justjava.generic;
 
-import org.jetbrains.annotations.Contract;
-
 import java.util.ArrayList;
 
 /**
@@ -10,7 +8,6 @@ import java.util.ArrayList;
  */
 public class Test2 {
 
-    @Contract(pure = true)
     public static <T> T pick(T x, T y){
         return y;
     }
