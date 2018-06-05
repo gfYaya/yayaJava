@@ -25,7 +25,7 @@ public class Test {
 
 		thread.start();
 		// 1秒后中断thread
-		TimeUnit.SECONDS.sleep(1);
+		TimeUnit.SECONDS.sleep(1);//here is no effect
 		thread.interrupt();
 
 		TimeUnit.SECONDS.sleep(1);
