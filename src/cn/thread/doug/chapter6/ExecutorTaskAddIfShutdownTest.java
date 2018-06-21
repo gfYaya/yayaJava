@@ -63,7 +63,8 @@ public class ExecutorTaskAddIfShutdownTest {
 
         }catch(RejectedExecutionException e){
             e.printStackTrace();
-            System.out.println("The executor is shutting down now.");
+            if(!exe.isShutdown()) //该异常不一定是因为被关闭后加入新的任务导致的,所以在此判断一下
+                System.out.println("The executor is shutting down now.");
             cdl.countDown();
         }
 
