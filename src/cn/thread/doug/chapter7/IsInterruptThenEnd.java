@@ -14,7 +14,11 @@ public class IsInterruptThenEnd {
                 //function isInterrupted(boolean ClearInterrupted) is private and native,so I don't know how interrupt int some other manner without reflect.
                 System.out.println(Thread.currentThread().isInterrupted());
             }
-            System.out.println(Thread.currentThread().isInterrupted());
+            System.out.println("done");
+            System.out.println("================");
+            if(Thread.interrupted()){
+                System.out.println("this thread is revived");
+            }
         });
         thread.start();
 
@@ -32,6 +36,13 @@ public class IsInterruptThenEnd {
             e.printStackTrace();
         }
 
-        //重置中断标记位.但是怎么做?.
+        //todo
+        //重置中断标记位.但是怎么做?.Thread.interrupted()肯定不行,目前在main方法这个主线程中
+        thread.interrupted();
+        System.out.println("-----------------------");
+        while (!thread.isInterrupted()){
+            System.out.println("main:"+ thread.isInterrupted()); //still console literal "false" again and again?why? I have interrupted it.
+        }
+
     }
 }
