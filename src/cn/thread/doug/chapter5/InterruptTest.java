@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 public class InterruptTest {
     public static void main(String[] args) {
         Thread thread = new Thread(() -> {
-            while (!Thread.interrupted()) {
+            while (!Thread.interrupted()) { //currentThread().isInterrupted(true); true =>clear the interrupted flag
                 System.out.println("Running");
             }
             System.out.println("Done");
