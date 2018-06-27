@@ -19,6 +19,8 @@ public class IsInterruptThenEnd {
             if(Thread.interrupted()){
                 System.out.println("this thread is revived");
             }
+
+            //todo  自己进行中断标志重置
         });
         thread.start();
 
@@ -38,12 +40,16 @@ public class IsInterruptThenEnd {
 
         //todo
         //重置中断标记位.但是怎么做?.Thread.interrupted()肯定不行,目前在main方法这个主线程中
-        thread.interrupted();
+        /*thread.interrupted();
         System.out.println("-----------------------");
         while (!thread.isInterrupted()){
             System.out.println("main:"+ thread.isInterrupted());
             //still console literal "false" again and again,and can't stop by itself?why? I have interrupted it.
-        }
+        }*/
 
+        /*  Add By Intopass and 叶次然
+         *  线程被中断 != 停止运行,线程依然处于存活中,可以自己在run方法中实现中断标志位重新清楚,
+         *  毕竟线程只是标志性中断,没有真正的中断,不影响代码正常执行
+         */
     }
 }
