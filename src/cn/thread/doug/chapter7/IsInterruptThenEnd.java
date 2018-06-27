@@ -41,7 +41,8 @@ public class IsInterruptThenEnd {
         thread.interrupted();
         System.out.println("-----------------------");
         while (!thread.isInterrupted()){
-            System.out.println("main:"+ thread.isInterrupted()); //still console literal "false" again and again?why? I have interrupted it.
+            System.out.println("main:"+ thread.isInterrupted());
+            //still console literal "false" again and again,and can't stop by itself?why? I have interrupted it.
         }
 
     }
