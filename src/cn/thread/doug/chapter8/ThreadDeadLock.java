@@ -21,8 +21,8 @@ public class ThreadDeadLock {
             header = exec.submit(new LoadFileTask("header.html"));
             footer = exec.submit(new LoadFileTask("footer.html"));
             String page = renderBody();
-            //将发生死锁 --- 由于任务正在等待子任务的结果
 
+            //将发生死锁 --- 由于任务正在等待子任务的结果
             return header.get()+page+footer.get();
             //return "abc";  // ==> get是产生死锁的关键,如果只是return literal ,没使用get ,就不会产生死锁.
         }
