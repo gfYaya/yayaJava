@@ -22,7 +22,8 @@ public class ThreadDeadLock {
             footer = exec.submit(new LoadFileTask("footer.html"));
             String page = renderBody();
 
-            //将发生死锁 --- 由于任务正在等待子任务的结果
+            //将发生死锁 --- 由于任务正在等待子任务的结果 => 目前只能执行一个任务,
+            // 可是这个任务如果返回值不执行完,该任务无法执行结束,线程池无法给第二个任务让出位置
             return header.get()+page+footer.get();
             //return "abc";  // ==> get是产生死锁的关键,如果只是return literal ,没使用get ,就不会产生死锁.
         }
@@ -54,7 +55,7 @@ class LoadFileTask implements Callable<String> {
 
     @Override
     public String call() throws Exception {
-        System.out.println("LoadFileTask execute call...");
+        System.out.println("LoadFileTask execute call..."+ this.fileName);
         return fileName;
     }
 }
