@@ -1,4 +1,4 @@
-package cn.netty.chapter2;
+package cn.netty.inaction.chapter2;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;

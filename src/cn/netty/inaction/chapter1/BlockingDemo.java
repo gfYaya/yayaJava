@@ -1,4 +1,4 @@
-package cn.netty.chapter1;
+package cn.netty.inaction.chapter1;
 
 import java.io.BufferedReader;
 import java.io.IOException;

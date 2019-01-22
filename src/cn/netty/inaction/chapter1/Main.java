@@ -1,4 +1,4 @@
-package cn.netty.chapter1;
+package cn.netty.inaction.chapter1;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;

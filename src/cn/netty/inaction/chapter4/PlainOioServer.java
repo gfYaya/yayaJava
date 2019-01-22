@@ -1,4 +1,4 @@
-package cn.netty.chapter4;
+package cn.netty.inaction.chapter4;
 
 import java.io.IOException;
 import java.io.OutputStream;
