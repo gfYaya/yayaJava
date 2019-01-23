@@ -8,6 +8,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.ReferenceCountUtil;
 
 //Handles a client-side channel.
+// SimpleChannelInboundHandler<Object>  SimpleChannelInboundHandler<Object> => which allows to explicit only handle a specific type of messages.
 public class DiscardClientHandler extends SimpleChannelInboundHandler<Object> {
     private ByteBuf content;
     private ChannelHandlerContext ctx;
@@ -47,7 +48,6 @@ public class DiscardClientHandler extends SimpleChannelInboundHandler<Object> {
         ReferenceCountUtil.release(content); //手动释放堆外内存
         ctx.close();
     }
-
 
     private void genericTraffic(){
         // Flush the outbound buffer to the socket. Once flushed, generate the same amount of traffic again.
