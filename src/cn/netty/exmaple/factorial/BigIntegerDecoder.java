@@ -3,7 +3,9 @@ package cn.netty.exmaple.factorial;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+import io.netty.handler.codec.CorruptedFrameException;
 
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -12,7 +14,7 @@ import java.util.List;
  * {@link BigInteger} instance.  For example, { 'F', 0, 0, 0, 1, 42 } will be
  * decoded into new BigInteger("42").
  */
-public class BigIntegerEncoder extends ByteToMessageDecoder {
+public class BigIntegerDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) throws Exception {
@@ -32,5 +34,23 @@ public class BigIntegerEncoder extends ByteToMessageDecoder {
         */
         byteBuf.markReaderIndex();
 
+        //check the magic number
+        int magicNumber = byteBuf.readUnsignedByte();
+        if(magicNumber != 'F'){
+            byteBuf.resetReaderIndex();
+            throw new CorruptedFrameException("Invalid magic number: " + magicNumber);
+        }
+
+        //wait until the whole data is available
+        int dataLength = byteBuf.readInt();
+        if(byteBuf.readableBytes()<dataLength){
+            byteBuf.resetReaderIndex();
+            return;
+        }
+
+        //Convert the recieved data into a new BigInteger
+        byte[] decoded = new byte[dataLength];
+        byteBuf.readBytes(decoded);
+        list.add(new BigInteger(decoded));
     }
 }
