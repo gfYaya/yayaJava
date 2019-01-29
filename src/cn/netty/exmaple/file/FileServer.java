@@ -31,7 +31,7 @@ public class FileServer {
             sslContext = null;
         }
 
-        //Congigure server
+        //Configure server
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try{
