@@ -24,9 +24,7 @@ public class FileServerHandler extends SimpleChannelInboundHandler<String> {
         //super.exceptionCaught(ctx, cause);
         cause.printStackTrace();
         if(ctx.channel().isActive()){
-            ctx.writeAndFlush("ERR: " +
-                    cause.getClass().getSimpleName() + ": " +
-                    cause.getMessage() + '\n').addListener(ChannelFutureListener.CLOSE);
+            ctx.writeAndFlush("ERR: " + cause.getClass().getSimpleName() + ": " + cause.getMessage() + '\n').addListener(ChannelFutureListener.CLOSE);
         }
     }
 }
