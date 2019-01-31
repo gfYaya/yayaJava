@@ -15,6 +15,7 @@ public class FileServerHandler extends SimpleChannelInboundHandler<String> {
         RandomAccessFile raf = null;
         long length = -1;
         try{
+            //the system-dependent filename
             raf = new RandomAccessFile(msg, "r");
             length = raf.length();
         }catch(Exception e){
