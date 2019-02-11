@@ -1,0 +1,4 @@
+现在通过文件出个对比(file2,file2就是netty example中的) 可以确定 是handler下的channelRead0 方法出的问题
+其他部分都是 自己写的 除了read0 是从netty官方demo拷贝出来的
+目前file2中 server 和initializer是 和file相同的 handler部分 read0 是netty官网的,其他的和file 中的handler 一模一样
+但是file 是不可运行的,依然无法下载文件,file2是可运行没问题的

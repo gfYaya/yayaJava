@@ -1,44 +1,40 @@
-/*
- * Copyright 2012 The Netty Project
- *
- * The Netty Project licenses this file to you under the Apache License,
- * version 2.0 (the "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
 package cn.netty.exmaple.http.file_2;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpRequestDecoder;
+import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.stream.ChunkedWriteHandler;
 
+/*   public abstract class ChannelInitializer<C extends Channel> extends ChannelInboundHandlerAdapter .
+ * A special {@link ChannelInboundHandler} which offers an easy way to initialize a {@link Channel} once it was
+ * registered to its {@link EventLoop}.
+ */
 public class HttpStaticFileServerInitializer extends ChannelInitializer<SocketChannel> {
+    private final SslContext sslContext;
 
-    private final SslContext sslCtx;
-
-    public HttpStaticFileServerInitializer(SslContext sslCtx) {
-        this.sslCtx = sslCtx;
+    public HttpStaticFileServerInitializer(SslContext sslContext) {
+        this.sslContext = sslContext;
     }
 
     @Override
-    public void initChannel(SocketChannel ch) {
+    protected void initChannel(SocketChannel ch) throws Exception {
         ChannelPipeline pipeline = ch.pipeline();
-        if (sslCtx != null) {
-            pipeline.addLast(sslCtx.newHandler(ch.alloc()));
+        if(sslContext != null){
+            pipeline.addLast(sslContext.newHandler(ch.alloc()));
         }
+        /**
+         * A combination of {@link HttpRequestDecoder} and {@link HttpResponseEncoder}
+         * which enables easier server side HTTP implementation.
+         */
         pipeline.addLast(new HttpServerCodec());
+        //content
         pipeline.addLast(new HttpObjectAggregator(65536));
+        //writing a large data stream asynchronously neither spending a lot of memory nor getting {@link OutOfMemoryError}.
         pipeline.addLast(new ChunkedWriteHandler());
         pipeline.addLast(new HttpStaticFileServerHandler());
     }

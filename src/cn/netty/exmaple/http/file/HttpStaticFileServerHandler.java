@@ -78,11 +78,13 @@ public class HttpStaticFileServerHandler extends SimpleChannelInboundHandler<Ful
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
         if(!request.decoderResult().isSuccess()){
+            System.out.println("!request.decoderResult().isSuccess()");
             sendError(ctx, HttpResponseStatus.BAD_REQUEST);
             return;
         }
 
-        if(!HttpMethod.GET.equals(request.method())){
+        if(HttpMethod.GET!=(request.method())){
+            System.out.println("!HttpMethod.GET.equals(request.method())");
             sendError(ctx, HttpResponseStatus.METHOD_NOT_ALLOWED);
             return;
         }
@@ -117,6 +119,7 @@ public class HttpStaticFileServerHandler extends SimpleChannelInboundHandler<Ful
         //cache validation
         String ifModifiedSince = request.headers().get(HttpHeaderNames.IF_MODIFIED_SINCE);
         if(ifModifiedSince != null && !ifModifiedSince.isEmpty()){
+            System.out.println("ifModifiedSince != null && !ifModifiedSince.isEmpty()");
             SimpleDateFormat dateFormatter = new SimpleDateFormat(HTTP_DATE_FORMAT, Locale.US);
             Date ifModifiedSinceDate = dateFormatter.parse(ifModifiedSince);
 
@@ -137,6 +140,7 @@ public class HttpStaticFileServerHandler extends SimpleChannelInboundHandler<Ful
             return;
         }
         long fileLength = raf.length();
+        System.out.println("1");
         HttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK);
         HttpUtil.setContentLength(response, fileLength);
         setContentTypeHeader(response, file);
@@ -147,6 +151,7 @@ public class HttpStaticFileServerHandler extends SimpleChannelInboundHandler<Ful
 
         //write the initial line and the header
         ctx.write(response);
+        System.out.println("2");
 
         //write the content
         ChannelFuture sendFileFuture;
@@ -160,11 +165,13 @@ public class HttpStaticFileServerHandler extends SimpleChannelInboundHandler<Ful
             // HttpChunkedInput will write the end marker (LastHttpContent) for us.
             lastContentFuture = sendFileFuture;
         }
+        System.out.println("3");
 
         //An {@link EventListener} listener which will be called once the sending task associated with future is being transferred.
         sendFileFuture.addListener(new ChannelProgressiveFutureListener() {
             @Override
             public void operationProgressed(ChannelProgressiveFuture future, long progress, long total) throws Exception {
+                System.out.println("ChannelProgressiveFutureListener operationProgressed");
                 if(total < 0){ //total unknow
                     System.err.println(future.channel() + " Transfer progress: " + progress);
                 } else {
@@ -174,20 +181,33 @@ public class HttpStaticFileServerHandler extends SimpleChannelInboundHandler<Ful
 
             @Override
             public void operationComplete(ChannelProgressiveFuture future) throws Exception {
+                System.out.println("ChannelProgressiveFutureListener operationComplete");
                 System.err.println(future.channel() + " Transfer complete.");
             }
         });
+        System.out.println("4");
 
         // Decide whether to close the connection or not.
         if(!HttpUtil.isKeepAlive(request)){
+            System.out.println("!HttpUtil.isKeepAlive(request)");
             // Close the connection when the whole content is written out.
             lastContentFuture.addListener(ChannelFutureListener.CLOSE);
+        }
+        System.out.println("5");
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        cause.printStackTrace();
+        if (ctx.channel().isActive()) {
+            sendError(ctx, INTERNAL_SERVER_ERROR);
         }
     }
 
     private static final Pattern ALLOWED_FILE_NAME = Pattern.compile("[^-\\._]?[^<>&\\\"]*");
 
     private static void sendError(ChannelHandlerContext ctx, HttpResponseStatus status){
+        System.out.println("handler sendError");
         FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, status,
                 Unpooled.copiedBuffer("Failure:"+status+"\r\n", CharsetUtil.UTF_8));
         response.headers().set(HttpHeaderNames.CONTENT_TYPE,"text/plain;charset=UTF-8");
@@ -196,6 +216,7 @@ public class HttpStaticFileServerHandler extends SimpleChannelInboundHandler<Ful
     }
 
     private static void sendListing(ChannelHandlerContext ctx, File dir, String dirPath){
+        System.out.println("handler sendListing");
         FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, HttpResponseStatus.OK);
         response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html; charset=UTF-8");
         StringBuilder buf = new StringBuilder().append("<!DOCTYPE html>\r\n")
@@ -235,6 +256,7 @@ public class HttpStaticFileServerHandler extends SimpleChannelInboundHandler<Ful
     }
 
     public static void sendRedirect(ChannelHandlerContext ctx, String newUri){
+        System.out.println("handler sendRedirect");
         FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, FOUND);
         response.headers().set(HttpHeaderNames.LOCATION, newUri);
 
@@ -247,6 +269,7 @@ public class HttpStaticFileServerHandler extends SimpleChannelInboundHandler<Ful
      * @param ctx Context
      */
     public static void sendNotModified(ChannelHandlerContext ctx){
+        System.out.println("handler sendNotModified");
         FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, FOUND);
         setDateHeader(response);
 
@@ -259,6 +282,7 @@ public class HttpStaticFileServerHandler extends SimpleChannelInboundHandler<Ful
      * @param response  HTTP response
      */
     private static void setDateHeader(FullHttpResponse response) {
+        System.out.println("handler setDateHeader");
         SimpleDateFormat dateFormatter = new SimpleDateFormat(HTTP_DATE_FORMAT, Locale.US);
         dateFormatter.setTimeZone(TimeZone.getTimeZone(HTTP_DATE_GMT_TIMEZONE));
         Calendar time = new GregorianCalendar();
@@ -272,6 +296,7 @@ public class HttpStaticFileServerHandler extends SimpleChannelInboundHandler<Ful
      * @param fileToCache    file to extract content type
      */
     private static void setDateAndCacheHeaders(HttpResponse response, File fileToCache) {
+        System.out.println("handler setDateAndCacheHeaders");
         SimpleDateFormat dateFormatter = new SimpleDateFormat(HTTP_DATE_FORMAT, Locale.US);
         dateFormatter.setTimeZone(TimeZone.getTimeZone(HTTP_DATE_GMT_TIMEZONE));
 
@@ -292,12 +317,14 @@ public class HttpStaticFileServerHandler extends SimpleChannelInboundHandler<Ful
      * @param file  file to extract content type
      */
     private static void setContentTypeHeader(HttpResponse response, File file) {
+        System.out.println("handler setContentTypeHeader");
         MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
         response.headers().set(HttpHeaderNames.CONTENT_TYPE, mimeTypesMap.getContentType(file.getPath()));
     }
 
     private static final Pattern INSECURE_URI = Pattern.compile(".*[<>&\"].*");
     private static String sanitizeUri(String uri){
+        System.out.println("handler sanitizeUri");
         //Decode the path
         try{
             uri = URLDecoder.decode(uri,"UTF-8");
