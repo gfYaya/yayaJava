@@ -141,7 +141,15 @@ public class HttpStaticFileServerHandler extends SimpleChannelInboundHandler<Ful
         }
         long fileLength = raf.length();
         System.out.println("1");
-        HttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK);
+        //Default implementation of a {@link FullHttpResponse}.
+        //HttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK);
+        /*
+          todo:
+          DefaultFullHttpResponse相比DefaultHttpResponse,多了一个FullHttpMessage的结合,但是为何如此,在下载文件的时候,始终处于请求过程,浏览器显示只是在请求,却得不到任何信息
+          通过chrome的network可看到,正常请求到文件是200,但是使用了DefaultFullHttpResponse时,status是pending而不是200
+         */
+        //The default {@link HttpResponse} implementation.
+        HttpResponse response = new DefaultHttpResponse(HTTP_1_1, OK);
         HttpUtil.setContentLength(response, fileLength);
         setContentTypeHeader(response, file);
         setDateAndCacheHeaders(response, file);
