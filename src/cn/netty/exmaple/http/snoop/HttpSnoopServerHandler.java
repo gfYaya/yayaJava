@@ -1,8 +1,13 @@
 package cn.netty.exmaple.http.snoop;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.DecoderResult;
 import io.netty.handler.codec.http.*;
+import io.netty.util.CharsetUtil;
 
 import java.nio.channels.SocketChannel;
 import java.util.List;
@@ -72,13 +77,57 @@ public class HttpSnoopServerHandler extends SimpleChannelInboundHandler<SocketCh
                 buf.append("\r\n");
             }
 
-            //todo
+            appendDecoderResult(buf, request);
+        }
+        if(msg instanceof HttpContent){
+            HttpContent httpContent = (HttpContent)msg;
+
+            ByteBuf content = httpContent.content();
+            if(content.isReadable()){
+                buf.append("CONTENT: ");
+                buf.append(content.toString(CharsetUtil.UTF_8));
+                buf.append("\r\n");
+                appendDecoderResult(buf, request);
+            }
+
+            if(msg instanceof LastHttpContent){
+                buf.append("END OF CONTENT\r\n");
+
+                LastHttpContent trailer = (LastHttpContent)msg;
+                //https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Trailer
+                if(!trailer.trailingHeaders().isEmpty()){
+                    buf.append("\r\n");
+                    for(CharSequence name : trailer.trailingHeaders().names()){
+                        for(CharSequence value : trailer.trailingHeaders().getAll(name)){
+                            buf.append("TRAILING HEADER: ");
+                            buf.append(name).append(" = ").append(value).append("\r\n");
+                        }
+                    }
+                    buf.append("\r\n");
+                }
+
+                if(!writeResponse(trailer, ctx)){
+                    //If is keep-alive is off, close the connection once the content is fully written.
+                    ctx.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
+                }
+            }
         }
     }
 
     private static void send100Continue(ChannelHandlerContext ctx){
         FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, CONTINUE);
         ctx.write(response);
+    }
+
+    private static void appendDecoderResult(StringBuilder buf, HttpObject o){
+        DecoderResult result = o.decoderResult();
+        if(result.isSuccess()){
+            return;
+        }
+
+        buf.append(".. WITH DECODER FAILURE: ");
+        buf.append(result.cause());
+        buf.append("\r\n");
     }
 
 }
