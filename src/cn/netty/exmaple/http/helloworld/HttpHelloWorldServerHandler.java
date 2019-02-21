@@ -58,6 +58,10 @@ public class HttpHelloWorldServerHandler extends SimpleChannelInboundHandler<Htt
                      但是使用了netstat 进行监听的时候 ,貌似结果也是相同,没有区别
                      应该是rfc规范硬性要求:  https://tools.ietf.org/html/rfc6223#section-7.2
                  */
+                /*  https://www.w3.org/Protocols/HTTP/1.1/draft-ietf-http-v11-spec-01.html#Persistent%20Connections
+                   The persistent connection ends when either side closes the connection or after the receipt of a response
+                   which lacks the "keep-alive" keyword.
+                 */
                 response.headers().set(CONNECTION, KEEP_ALIVE);
                 ctx.write(response);
             }

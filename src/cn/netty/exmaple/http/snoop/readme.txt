@@ -1,0 +1,6 @@
+1.目前测试,server端,目前通过文件内容复制和对比package snoop2下 所有的都是netty项目,将HttpSnoopServer文件替换为package snoop
+下的,项目能完好运行,说明HTTPSnoopServer没问题.
+2. 同样,将snoop下的 HttpSnoopServerInitializer替换到snoop2 这个package下,运行snoop2下的HttpSnoopServer,能正常运行,说明
+HttpSnoopServerInitializer没问题,说明 是HttpSnoopServerHandler出问题了
+最终通过对比确认出来,首先, 泛型是Object而自己写的Handler的泛型是SocketChannel
+其次:if(msg instanceof HttpRequest){  之后的代码 花括号打的有问题
