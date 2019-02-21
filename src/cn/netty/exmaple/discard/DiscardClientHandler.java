@@ -8,7 +8,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.ReferenceCountUtil;
 
 //Handles a client-side channel.
-// SimpleChannelInboundHandler<Object>  SimpleChannelInboundHandler<Object> => which allows to explicit only handle a specific type of messages.
+//SimpleChannelInboundHandler<Object> => which allows to explicit only handle a specific type of messages.
 public class DiscardClientHandler extends SimpleChannelInboundHandler<Object> {
     private ByteBuf content;
     private ChannelHandlerContext ctx;
