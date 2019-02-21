@@ -26,6 +26,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
   public class HttpSnoopServerHandler extends SimpleChannelInboundHandler<SocketChannel> {
     是因为 if(msg instanceof HttpRequest){  之后没用else情况 进行return ?毕竟SocketChannel 和HttpRequest无继承关系
  */
+//todo 为何发送一次请求http://127.0.0.1:8080/ 后,会出现执行四次channelRead0
 public class HttpSnoopServerHandler extends SimpleChannelInboundHandler<Object> {
     private HttpRequest request;
 
