@@ -51,6 +51,11 @@ public class DiscardClientHandler extends SimpleChannelInboundHandler<Object> {
 
     private void genericTraffic(){
         // Flush the outbound buffer to the socket. Once flushed, generate the same amount of traffic again.
+        /* write:将数据写到远程节点。这个数据将被传递给ChannelPipeline，并且排队直到它被冲刷
+           flush:将之前已写的数据冲刷到底层传输，如一个Socket
+           writeAndFlush:一个简便的方法，等同于调用write()并接着调用flush()
+         */
+        System.out.println("content.retainedDuplicate():"+content.retainedDuplicate());
         ctx.writeAndFlush(content.retainedDuplicate()).addListener(trafficGenerator);
     }
 
@@ -58,6 +63,7 @@ public class DiscardClientHandler extends SimpleChannelInboundHandler<Object> {
     private final ChannelFutureListener trafficGenerator = new ChannelFutureListener() {
         @Override
         public void operationComplete(ChannelFuture channelFuture) throws Exception {
+            System.out.println("listener operationComplete");//不断的执行
             if(channelFuture.isSuccess()){
                 genericTraffic();
             }else{
