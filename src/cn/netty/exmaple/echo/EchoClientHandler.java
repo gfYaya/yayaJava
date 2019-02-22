@@ -23,6 +23,7 @@ public class EchoClientHandler extends ChannelInboundHandlerAdapter {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         //super.channelActive(ctx);
         System.out.println("client channel active");
+        System.out.println("firstMessage:"+firstMessage);
         ctx.writeAndFlush(firstMessage);
     }
 

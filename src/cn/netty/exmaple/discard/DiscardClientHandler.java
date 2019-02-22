@@ -55,7 +55,7 @@ public class DiscardClientHandler extends SimpleChannelInboundHandler<Object> {
            flush:将之前已写的数据冲刷到底层传输，如一个Socket
            writeAndFlush:一个简便的方法，等同于调用write()并接着调用flush()
          */
-        System.out.println("content.retainedDuplicate():"+content.retainedDuplicate());
+        System.out.println("content.retainedDuplicate():"+content.retainedDuplicate()); //PooledDuplicatedByteBuf(ridx: 0, widx: 256, cap: 256, unwrapped: PooledUnsafeDirectByteBuf(ridx: 0, widx: 256, cap: 256))
         ctx.writeAndFlush(content.retainedDuplicate()).addListener(trafficGenerator);
     }
 
