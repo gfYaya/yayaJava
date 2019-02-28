@@ -184,9 +184,27 @@ public class HttpUploadServerHandler extends SimpleChannelInboundHandler<HttpObj
                     writeHttpData(data);
                 }
             }
-
-
-            //todo
+            //Check partial decoding for a FileUpload
+            InterfaceHttpData data = decoder.currentPartialHttpData();
+            if(data != null){
+                StringBuilder builder = new StringBuilder();
+                if(partialContent == null){
+                    partialContent = (HttpData) data;
+                    if(partialContent instanceof FileUpload){
+                        builder.append("Start FileUpload: ").append(((FileUpload) partialContent).getFilename()).append(" ");
+                    }else{
+                        builder.append("Start Attribute: ").append(partialContent.getName()).append(" ");
+                    }
+                    builder.append("(DefinedSize: ").append(partialContent.definedLength()).append(")");
+                }
+                if(partialContent.definedLength() > 0){
+                    builder.append(" ").append(partialContent.length() * 100 / partialContent.definedLength()).append("% ");
+                    logger.info(builder.toString());
+                }else {
+                    builder.append(" ").append(partialContent.length()).append(" ");
+                    logger.info(builder.toString());
+                }
+            }
         }catch(HttpPostRequestDecoder.EndOfDataDecoderException e){
             //end
             responseContent.append("\r\n\r\nEND OF CONTENT CHUNK BY CHUNK\r\n\r\n");
