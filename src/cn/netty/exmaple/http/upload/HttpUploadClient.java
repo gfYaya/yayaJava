@@ -687,7 +687,7 @@ public class HttpUploadClient {
 
             //Simple Post Form : factory used for big attributes
             List<InterfaceHttpData> bodylist = formpost(b, host, port, uriSimple, file, factory, headers);
-            if(){
+            if(bodylist == null){
 
             }
         }finally{
@@ -781,6 +781,32 @@ public class HttpUploadClient {
         bodyRequestEncoder.addBodyAttribute("fourthinfo", textAreaLong);
         bodyRequestEncoder.addBodyFileUpload("myfile", file, "application/x-zip-compressed", false);
 
-        //todo
+        //finalize request
+        request = bodyRequestEncoder.finalizeRequest();
+
+        //create the bodylist to be reused on the last version with Multipart support.
+        List<InterfaceHttpData> bodylist = bodyRequestEncoder.getBodyListAttributes();
+
+        //send the request
+        channel.write(request);
+
+        //test if request was chunked and if so , finish the write
+        if(bodyRequestEncoder.isChunked()){  //could do either request.isChunked()
+            // either do it through ChunkedWriteHandler  => pipeline.addLast(new ChunkedWriteHandler());  ?
+            channel.write(bodyRequestEncoder);
+        }
+
+        channel.flush();
+
+        // Do not clear here since we will reuse the InterfaceHttpData on the next request
+        // for the example (limit action on client side). Take this as a broadcast of the same
+        // request on both Post actions.
+        //
+        // On standard program, it is clearly recommended to clean all files after each request
+        // bodyRequestEncoder.cleanFiles();
+
+        // Wait for the server to close the connection.
+        channel.closeFuture().sync();
+        return bodylist;
     }
 }
