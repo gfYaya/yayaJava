@@ -81,6 +81,8 @@ public class HttpCorsServerInitializer extends ChannelInitializer<SocketChannel>
         * implementation.  {@link ChunkedWriteHandler} manages such complicated states
         * so that you can send a large data stream without difficulties.
         * */
+        //https://en.wikipedia.org/wiki/Chunked_transfer_encoding
+        //Chunked transfer encoding allows a server to maintain an HTTP persistent connection for dynamically generated content
         pipeline.addLast(new ChunkedWriteHandler());
         pipeline.addLast(new CorsHandler(corsConfig));
         pipeline.addLast(new OkResponseHandler());

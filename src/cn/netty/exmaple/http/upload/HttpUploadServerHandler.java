@@ -8,6 +8,7 @@ import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
 import io.netty.handler.codec.http.multipart.*;
 import io.netty.util.CharsetUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collections;
@@ -62,10 +63,10 @@ public class HttpUploadServerHandler extends SimpleChannelInboundHandler<HttpObj
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, HttpObject msg) throws Exception {
         logger.info("upload server handler channelRead0");
-        if(msg instanceof HttpRequest){
-            HttpRequest request = this.request = (HttpRequest)msg;
+        if(msg instanceof HttpRequest) {
+            HttpRequest request = this.request = (HttpRequest) msg;
             URI uri = new URI(request.uri());
-            if(!uri.getPath().startsWith("/form")){
+            if (!uri.getPath().startsWith("/form")) {
                 //Write menu
                 writeMenu(ctx);
                 return;
@@ -78,20 +79,20 @@ public class HttpUploadServerHandler extends SimpleChannelInboundHandler<HttpObj
             responseContent.append("\r\n\r\n");
 
             //new getMethod
-            for(Map.Entry<String, String> entry: request.headers()){
+            for (Map.Entry<String, String> entry : request.headers()) {
                 responseContent.append("HEADER: " + entry.getKey() + '=' + entry.getValue() + "\r\n");
             }
             responseContent.append("\r\n\r\n");
 
             //new getMethod
-            Set<io.netty.handler.codec.http.cookie.Cookie> cookies ;
+            Set<io.netty.handler.codec.http.cookie.Cookie> cookies;
             String value = request.headers().get(HttpHeaderNames.COOKIE);
-            if(value == null){
+            if (value == null) {
                 cookies = Collections.emptySet();
-            }else{
+            } else {
                 cookies = ServerCookieDecoder.STRICT.decode(value);
             }
-            for(io.netty.handler.codec.http.cookie.Cookie cookie : cookies){
+            for (io.netty.handler.codec.http.cookie.Cookie cookie : cookies) {
                 responseContent.append("COOKIE: " + cookie + "\r\n");
             }
             responseContent.append("\r\n\r\n");
@@ -99,24 +100,24 @@ public class HttpUploadServerHandler extends SimpleChannelInboundHandler<HttpObj
             QueryStringDecoder decoderQuery = new QueryStringDecoder(request.uri());
             //Returns the decoded key-value parameter pairs of the URI.
             Map<String, List<String>> uriAttributes = decoderQuery.parameters();
-            for(Map.Entry<String, List<String>> attr: uriAttributes.entrySet()){
-                for(String attrVal : attr.getValue()){
+            for (Map.Entry<String, List<String>> attr : uriAttributes.entrySet()) {
+                for (String attrVal : attr.getValue()) {
                     responseContent.append("URI: " + attr.getKey() + '=' + attrVal + "\r\n");
                 }
             }
             responseContent.append("\r\n\r\n");
 
             //if GET method:should not try to create a HttpPostRequestDecoder
-            if(HttpMethod.GET.equals(request.method())){
+            if (HttpMethod.GET.equals(request.method())) {
                 //Sp stop here
                 responseContent.append("\r\n\r\nEND OF GET CONTENT\r\n");
                 //Not now: LastHttpContent will be sent writeResposne(ctx.channel())
                 return;
             }
-            try{
+            try {
                 //This decoder will decode Body and can handle POST BODY.And the factory used to create InterfaceHttpData.
                 decoder = new HttpPostRequestDecoder(factory, request);
-            }catch(HttpPostRequestDecoder.ErrorDataDecoderException e){
+            } catch (HttpPostRequestDecoder.ErrorDataDecoderException e) {
                 e.printStackTrace();
                 responseContent.append(e.getMessage());
                 writeResponse(ctx.channel());
@@ -125,16 +126,17 @@ public class HttpUploadServerHandler extends SimpleChannelInboundHandler<HttpObj
             }
 
             readingChunks = HttpUtil.isTransferEncodingChunked(request);
-            responseContent.append("Is Chunked:"+readingChunks+"\r\n");
+            responseContent.append("Is Chunked:" + readingChunks + "\r\n");
             //True if this request is a Multipart request , multipart 指的是 multipart/form-data (参考的Spring MVC的 multipart)?
             // 而不是chunked分块?  https://www.jianshu.com/p/c09efa423c2d
-            responseContent.append("Is Multipart"+decoder.isMultipart()+"\r\n");
-            if(readingChunks){
+            responseContent.append("Is Multipart" + decoder.isMultipart() + "\r\n");
+            if (readingChunks) {
                 //chunk version
                 responseContent.append("Chunks :");
                 //ChannelPipeline是线程安全的,但是ChannelHandler不是线程安全的?不过按照徐妈所给出的答案,应该是历史优化代码的时候忘记了.
                 readingChunks = true;
             }
+        }
 
             //check if the decoder was constructed before
             //if not it handles the form get
@@ -164,7 +166,7 @@ public class HttpUploadServerHandler extends SimpleChannelInboundHandler<HttpObj
             }else{
                 writeResponse(ctx.channel());
             }
-        }
+
     }
 
     /**
@@ -251,6 +253,12 @@ public class HttpUploadServerHandler extends SimpleChannelInboundHandler<HttpObj
                     }
                     // fileUpload.isInMemory();// tells if the file is in Memory or on File
                     // fileUpload.renameTo(dest); // enable to move into another File dest
+                    try {
+                        File dest = new File("D:/tmp/upload_yaya.txt");
+                        fileUpload.renameTo(dest);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     // decoder.removeFileUploadFromClean(fileUpload); //remove the File of to delete file
                 }else{
                     responseContent.append("\tFile to be continued but should not!\r\n");

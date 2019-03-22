@@ -659,6 +659,7 @@ public class HttpUploadClient {
 
         URI uriFile = new URI(postFile);
         File file = new File(FILE);
+        System.out.println(file.getAbsolutePath());
         if(!file.canRead()){
             throw new FileNotFoundException(FILE);
         }
@@ -688,13 +689,17 @@ public class HttpUploadClient {
             //Simple Post Form : factory used for big attributes
             List<InterfaceHttpData> bodylist = formpost(b, host, port, uriSimple, file, factory, headers);
             if(bodylist == null){
-
+                factory.cleanAllHttpData();
             }
+
+            //Multipart Post Form : factory userd
+            formpostmultipart(b, host, port, uriFile, factory, headers, bodylist);
         }finally{
-
+            //shutdown executor threads to exit
+            group.shutdownGracefully();
+            //Really clean all temporary files if they still exits
+            factory.cleanAllHttpData();
         }
-
-        //todo
     }
 
     /**
@@ -808,5 +813,49 @@ public class HttpUploadClient {
         // Wait for the server to close the connection.
         channel.closeFuture().sync();
         return bodylist;
+    }
+
+    /**
+     * Multipart example
+     */
+    private static void formpostmultipart(
+            Bootstrap bootstrap, String host, int port, URI uriFile, HttpDataFactory factory,
+            Iterable<Map.Entry<String, String>> headers, List<InterfaceHttpData> bodylist) throws Exception {
+        // xxx/formpostmultipart
+        // Start the connection attempt
+        ChannelFuture future = bootstrap.connect(SocketUtils.socketAddress(host, port));
+        // Wait until the connection attempt succeeds or fails
+        Channel channel = future.sync().channel();
+
+        // Prepare the http request
+        HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, uriFile.toASCIIString());
+        // Use the PostBody encoder
+        HttpPostRequestEncoder bodyRequestEncoder = new HttpPostRequestEncoder(factory, request, true);//true => multipart
+
+        // it is legal to add directly header or cookier into the request until finalize.
+        for(Map.Entry<String, String> entry : headers){
+            request.headers().set(entry.getKey(), entry.getValue());
+        }
+
+        // add Form attribute for previous request in formpost()
+        bodyRequestEncoder.setBodyHttpDatas(bodylist);
+
+        // finalize request
+        bodyRequestEncoder.finalizeRequest();
+
+        //send request
+        channel.write(request);
+
+        // test if request was chunked and if so, finish the write
+        if (bodyRequestEncoder.isChunked()){
+            channel.write(bodyRequestEncoder);
+        }
+        channel.flush();
+
+        // Now no more use of file representation (and list of HttpData)
+        bodyRequestEncoder.cleanFiles();
+
+        // Wait for the server to close the connection
+        channel.closeFuture().sync();
     }
 }

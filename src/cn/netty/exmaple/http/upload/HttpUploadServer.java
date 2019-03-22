@@ -38,6 +38,12 @@ public class HttpUploadServer {
             b.childHandler(new HttpUploadServerInitializer(sslCtx));
 
             Channel ch = b.bind(PORT).sync().channel();
+
+            System.err.println("Open your web browser and navigate to " + (SSL? "https" : "http") + "://127.0.0.1:" + PORT + '/');
+            //获取Channel 的CloseFuture，并且阻塞当前线程直到它完成
+            ch.closeFuture().sync();
+            //ch.closeFuture();   //不用sync(),则运行HttpUploadServer,过一会就会立即结束该Java进程
+            //sync()后,该应用程序将会阻塞等待直到服务器的Channel关闭（因为你在Channel 的CloseFuture 上调用了sync()方法）
         }finally{
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
