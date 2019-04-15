@@ -60,6 +60,7 @@ public class HttpUploadServerHandler extends SimpleChannelInboundHandler<HttpObj
         ctx.channel().close();
     }
 
+    //执行了多次
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, HttpObject msg) throws Exception {
         logger.info("upload server handler channelRead0");
